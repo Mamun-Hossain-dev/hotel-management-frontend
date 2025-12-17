@@ -1,11 +1,11 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 export interface Room {
   _id: string
   roomNumber: string
-  type: "single" | "double" | "suite" | "deluxe"
+  type: 'single' | 'double' | 'suite' | 'deluxe'
   price: number
-  status: "available" | "occupied" | "maintenance"
+  status: 'available' | 'occupied' | 'maintenance'
   description?: string
   createdAt: string
   updatedAt: string
@@ -39,16 +39,20 @@ export async function getRooms(params?: {
 }): Promise<ApiResponse<Room[]>> {
   const queryParams = new URLSearchParams()
 
-  if (params?.search) queryParams.append("search", params.search)
-  if (params?.type && params.type !== "all") queryParams.append("type", params.type)
-  if (params?.status && params.status !== "all") queryParams.append("status", params.status)
+  if (params?.search) queryParams.append('search', params.search)
+  if (params?.type && params.type !== 'all')
+    queryParams.append('type', params.type)
+  if (params?.status && params.status !== 'all')
+    queryParams.append('status', params.status)
 
-  const url = `${API_BASE_URL}/rooms${queryParams.toString() ? `?${queryParams.toString()}` : ""}`
+  const url = `${API_BASE_URL}/rooms${
+    queryParams.toString() ? `?${queryParams.toString()}` : ''
+  }`
 
   const response = await fetch(url)
 
   if (!response.ok) {
-    throw new Error("Failed to fetch rooms")
+    throw new Error('Failed to fetch rooms')
   }
 
   return response.json()
@@ -59,18 +63,20 @@ export async function getRoom(id: string): Promise<ApiResponse<Room>> {
   const response = await fetch(`${API_BASE_URL}/rooms/${id}`)
 
   if (!response.ok) {
-    throw new Error("Failed to fetch room")
+    throw new Error('Failed to fetch room')
   }
 
   return response.json()
 }
 
 // Create room
-export async function createRoom(data: CreateRoomData): Promise<ApiResponse<Room>> {
+export async function createRoom(
+  data: CreateRoomData,
+): Promise<ApiResponse<Room>> {
   const response = await fetch(`${API_BASE_URL}/rooms`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   })
@@ -78,18 +84,20 @@ export async function createRoom(data: CreateRoomData): Promise<ApiResponse<Room
   const result = await response.json()
 
   if (!response.ok) {
-    throw new Error(result.message || "Failed to create room")
+    throw new Error(result.message || 'Failed to create room')
   }
 
   return result
 }
 
 // Update room
-export async function updateRoom(data: UpdateRoomData): Promise<ApiResponse<Room>> {
+export async function updateRoom(
+  data: UpdateRoomData,
+): Promise<ApiResponse<Room>> {
   const response = await fetch(`${API_BASE_URL}/rooms/${data._id}`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   })
@@ -97,7 +105,7 @@ export async function updateRoom(data: UpdateRoomData): Promise<ApiResponse<Room
   const result = await response.json()
 
   if (!response.ok) {
-    throw new Error(result.message || "Failed to update room")
+    throw new Error(result.message || 'Failed to update room')
   }
 
   return result
@@ -106,13 +114,13 @@ export async function updateRoom(data: UpdateRoomData): Promise<ApiResponse<Room
 // Delete room
 export async function deleteRoom(id: string): Promise<ApiResponse<null>> {
   const response = await fetch(`${API_BASE_URL}/rooms/${id}`, {
-    method: "DELETE",
+    method: 'DELETE',
   })
 
   const result = await response.json()
 
   if (!response.ok) {
-    throw new Error(result.message || "Failed to delete room")
+    throw new Error(result.message || 'Failed to delete room')
   }
 
   return result
